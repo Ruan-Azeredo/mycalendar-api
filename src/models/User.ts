@@ -2,11 +2,11 @@ import { prismaClient } from "../database/prismaClient"
 const crypto = require("crypto")
 
 interface User{
-    id?: string,
-    name: string,
-    email: string,
-    password: string,
-    created_at?: Date,
+    id?: string
+    name: string
+    email: string
+    password: string
+    created_at?: Date
     updated_at?: Date
 }
 
@@ -31,6 +31,22 @@ class User {
         const { name, email, password } = params
 
         const user = await prismaClient.user.create({
+            data: {
+                name: name,
+                email: email,
+                password: this.encriptPassword(password)
+            }
+        })
+        return user
+    }
+
+    static async update(params: User){
+        const { id, name, email, password } = params
+
+        const user = await prismaClient.user.update({
+            where: {
+                id: id
+            },
             data: {
                 name: name,
                 email: email,

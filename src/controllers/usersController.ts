@@ -20,10 +20,21 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('', async (req: Request, res: Response) => {
 
-    const {name, email, password } = req.body
+    const { name, email, password } = req.body
 
     const user = await User.create({
         name: name, email: email, password: password,
+    })
+    return res.json(user)
+})
+
+router.put('/:id', async (req: Request, res: Response) => {
+
+    const {id} = req.params
+    const { name, email, password } = req.body
+
+    const user = await User.update({
+        id: id, name: name, email: email, password: password,
     })
     return res.json(user)
 })
