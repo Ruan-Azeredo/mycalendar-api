@@ -1,5 +1,4 @@
 import { Router,  Response, Request } from "express";
-import { prismaClient } from "../database/prismaClient";
 import User from "../models/User";
 
 const router = Router()
