@@ -1,14 +1,14 @@
 import { Request, Response, Router } from "express";
 import Tag from "../models/Tag";
 
-const router = Router()
+const tagRouter = Router()
 
-router.get('/all', async (req: Request, resp: Response) => {
+tagRouter.get('/all', async (req: Request, resp: Response) => {
     const tags = await Tag.getAll()
     return resp.json(tags)
 })
 
-router.post('', async (req: Request, res: Response) => {
+tagRouter.post('', async (req: Request, res: Response) => {
 
     const { user_id, name, color } = req.body
 
@@ -18,7 +18,7 @@ router.post('', async (req: Request, res: Response) => {
     return res.json(tag)
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+tagRouter.put('/:id', async (req: Request, res: Response) => {
 
     const {id} = req.params
     const { user_id, name, color } = req.body
@@ -29,10 +29,10 @@ router.put('/:id', async (req: Request, res: Response) => {
     return res.json(tag)
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+tagRouter.delete('/:id', async (req: Request, res: Response) => {
     const {id} = req.params
 
     const tag = await Tag.delete(id)
 })
 
-export {router}
+export {tagRouter}
