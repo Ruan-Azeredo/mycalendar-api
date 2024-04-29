@@ -21,6 +21,7 @@ model User{
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user Tag[]
+  userEvent Event[]
 
   @@map("users")
 }
@@ -31,6 +32,22 @@ model Tag{
   user User @relation(fields: [user_id], references: [id])
   name String
   color String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  tag Event[]
+}
+
+model Event{
+  id String @id @default(uuid())
+  user_id String
+  userEvent User @relation(fields: [user_id], references: [id])
+  tag_id String?
+  tag Tag? @relation(fields: [tag_id], references: [id])
+  name String
+  description String
+  done Boolean @default(false)
+  startTime Int?
+  finishTime Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
