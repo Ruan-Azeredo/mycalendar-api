@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,41 +7,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user Tag[]
-  userEvent Event[]
+  userEvent  Event[]
+  user       Tag[]
 
   @@map("users")
 }
 
-model Tag{
-  id String @id @default(uuid())
-  user_id String
-  user User @relation(fields: [user_id], references: [id])
-  name String
-  color String @unique
+model Tag {
+  id         String   @id @default(uuid())
+  user_id    String
+  name       String
+  color      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  tag Event[]
+  tag        Event[]
+  user       User     @relation(fields: [user_id], references: [id])
 }
 
-model Event{
-  id String @id @default(uuid())
-  user_id String
-  userEvent User @relation(fields: [user_id], references: [id])
-  tag_id String?
-  tag Tag? @relation(fields: [tag_id], references: [id])
-  name String
-  description String
-  done Boolean @default(false)
-  startTime Int?
-  finishTime Int?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model Event {
+  id          String   @id @default(uuid())
+  user_id     String
+  tag_id      String?
+  name        String
+  description String?
+  done        Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  finishTime  Int?
+  startTime   Int?
+  tag         Tag?     @relation(fields: [tag_id], references: [id])
+  userEvent   User     @relation(fields: [user_id], references: [id])
 }
