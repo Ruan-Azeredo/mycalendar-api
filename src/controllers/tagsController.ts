@@ -8,6 +8,16 @@ tagRouter.get('/all', async (req: Request, resp: Response) => {
     return resp.json(tags)
 })
 
+tagRouter.get('', async (req: Request, resp: Response) => {
+
+    const { user_id } = req.query
+
+    const tags = await Tag.getFromUsers({
+        user_id: user_id
+    })
+    return resp.json(tags)
+})
+
 tagRouter.post('', async (req: Request, res: Response) => {
 
     const { user_id, name, color } = req.body
@@ -33,6 +43,7 @@ tagRouter.delete('/:id', async (req: Request, res: Response) => {
     const {id} = req.params
 
     const tag = await Tag.delete(id)
+    return res.json(tag)
 })
 
 export {tagRouter}

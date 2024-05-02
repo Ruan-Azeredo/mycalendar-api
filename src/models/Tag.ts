@@ -46,6 +46,19 @@ class Tag {
         return tags
     }
 
+    static async getFromUsers(infos: any){
+        const { user_id } = infos
+        const tags = await prismaClient.tag.findMany({
+            where: {
+                user_id: {
+                    equals: user_id
+                }
+            }
+        })
+
+        return tags
+    }
+
     static async delete(id: string){
         const tag = await prismaClient.tag.delete({
             where: {
