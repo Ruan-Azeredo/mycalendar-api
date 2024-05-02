@@ -17,39 +17,45 @@ class Event {
 
     static async create(params: Event){
         const { user_id, tag_id, name, description, done, startTime, finishTime } = params
-
-        const event = await prismaClient.event.create({
-            data: {
-                user_id: user_id,
-                tag_id: tag_id,
-                name: name,
-                description: description,
-                done: done,
-                startTime: startTime,
-                finishTime: finishTime
-            }
-        })
-        return event
+        try {
+            const event = await prismaClient.event.create({
+                data: {
+                    user_id: user_id,
+                    tag_id: tag_id,
+                    name: name,
+                    description: description,
+                    done: done,
+                    startTime: startTime,
+                    finishTime: finishTime
+                }
+            })
+            return event
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
     }
 
     static async update(params: Event){
         const { id, user_id, tag_id, name, description, done, startTime, finishTime } = params
-
-        const event =  await prismaClient.event.update({
-            where: {
-                id: id
-            },
-            data: {
-                user_id: user_id,
-                tag_id: tag_id,
-                name: name,
-                description: description,
-                done: done,
-                startTime: startTime,
-                finishTime: finishTime
-            }
-        })
-        return event
+        try {
+            const event =  await prismaClient.event.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    user_id: user_id,
+                    tag_id: tag_id,
+                    name: name,
+                    description: description,
+                    done: done,
+                    startTime: startTime,
+                    finishTime: finishTime
+                }
+            })
+            return event
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
     }
 
     //maybe depreadated
@@ -60,35 +66,51 @@ class Event {
     }
 
     static async getFilteredEvents(infos: any){
-        const { tag_id_array, name, startTime, finishTime } = infos
-
-        const events = await prismaClient.event.findMany({
-            where: {
-                name: {
-                    contains: name as string
-                },
-                tag_id: {
-                    in: tag_id_array as []
-                },
-                startTime: {
-                    gte: startTime as number
-                },
-                finishTime: {
-                    lte: finishTime as number
+        const { user_id, tag_id_array, name, startTime, finishTime } = infos
+        try {
+            const events = await prismaClient.event.findMany({
+                where: {
+                    user_id: {
+                        equals: user_id
+                    },
+                    name: {
+                        contains: name as string
+                    },
+                    tag_id: {
+                        in: tag_id_array as []
+                    },
+                    startTime: {
+                        gte: startTime as number
+                    },
+                    finishTime: {
+                        lte: finishTime as number
+                    }
                 }
-            }
-        })
-        return events
+            })
+            events.sort((a, b) => {
+                const createdAt_a = a.created_at ? a.created_at.getTime() : Number.MAX_SAFE_INTEGER
+                const createdAt_b = b.created_at ? b.created_at.getTime() : Number.MAX_SAFE_INTEGER
+                
+                return createdAt_a - createdAt_b
+              });
+            return events
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
     }
 
 
     static async delete(id: string){
-        const events = await prismaClient.event.delete({
-            where: {
-                id: id
-            }
-        })
-        return events
+        try {
+            const events = await prismaClient.event.delete({
+                where: {
+                    id: id
+                }
+            })
+            return events
+        } catch (error) {
+            throw new Error((error as Error).message)
+        }
     }
 
 }
